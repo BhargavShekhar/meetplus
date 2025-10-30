@@ -1,135 +1,98 @@
-# Turborepo starter
+# MeetPlus: A Full-Stack Real-Time Video Calling App
 
-This Turborepo starter is maintained by the Turborepo core team.
 
-## Using this example
+**MeetPlus** is a high-performance, multi-participant video conferencing application built from the ground up with a scalable, self-hosted architecture. It uses a Next.js frontend, a self-hosted LiveKit server on AWS, and is built within a Turborepo for efficient monorepo management.
 
-Run the following command:
+**Live Demos:**
+* **Frontend (Vercel):** `https.meet.bhargavshekhar.shop`
+* **Backend (LiveKit):** `wss://livekit.bhargavshekhar.shop`
+
+---
+
+## 🚀 Key Features
+
+* **Multi-participant rooms:** Real-time video and audio conferencing.
+* **Secure by default:** Uses token-based authentication (JWT) to control access to rooms.
+* **Scalable SFU Backend:** Built on **LiveKit**, a powerful open-source WebRTC Selective Forwarding Unit (SFU).
+* **Recording-Ready:** Includes a self-hosted **LiveKit Egress** service, ready to record and download sessions.
+* **Professional Deployment:** A clean separation of concerns, with the frontend on Vercel and the stateful backend on AWS.
+
+## 🏗️ System Architecture
+
+This project is not a simple monolith. It's a distributed system composed of two main parts:
+
+1.  **The Frontend (`web` app):**
+    * A **Next.js** application deployed to **Vercel**.
+    * It serves the React-based user interface.
+    * It includes a secure Next.js API route (`/api/token`) that communicates with the LiveKit backend to securely generate access tokens. **The API secret is never exposed to the client.**
+
+2.  **The Backend (LiveKit Server):**
+    * A **LiveKit SFU** server running on an **AWS EC2** instance.
+    * This server is fully containerized using **Docker Compose** and manages:
+        * **LiveKit:** The main SFU for routing all video/audio.
+        * **Caddy:** An automatic reverse proxy that provides free, auto-renewing SSL certificates from Let's Encrypt.
+        * **Redis:** An in-memory store for coordinating state.
+        * **Egress:** The service for rendering and recording rooms (requires a high-CPU instance to run).
+    * All networking is handled by **GoDaddy DNS**, pointing subdomains to Vercel and AWS as needed.
+
+## 🛠️ Tech Stack
+
+This project uses a modern, full-stack, real-time technology set.
+
+| Category | Technology | Purpose |
+| :--- | :--- | :--- |
+| **Monorepo** | **Turborepo** | Managing the `web` app and shared packages. |
+| **Frontend** | **Next.js** / **React** | UI and client-side logic. |
+| | **TypeScript** | Type-safe code across the entire stack. |
+| **Real-Time Backend**| **LiveKit** | WebRTC Selective Forwarding Unit (SFU). |
+| **Backend Deployment**| **AWS EC2** | Hosting the LiveKit Docker containers. |
+| | **Docker** / **Docker Compose**| Containerizing and running the backend services. |
+| **Frontend Deployment**| **Vercel** | Hosting the Next.js frontend. |
+| **Networking** | **GoDaddy** | DNS management for all custom domains. |
+| | **Caddy** | Auto-SSL & reverse proxy for the LiveKit server. |
+| **Database/Store** | **Redis** | State management for the LiveKit server. |
+
+---
+
+## 🌎 Production Deployment
+
+This project is fully deployed. The infrastructure is set up as follows:
+
+1.  **Frontend (`web`):**
+    * Deployed to **Vercel**.
+    * Environment variables `LIVEKIT_API_KEY`, `LIVEKIT_API_SECRET`, and `NEXT_PUBLIC_LIVEKIT_URL` are set in the Vercel project settings.
+    * The `web` app is available at `https://meet.bhargavshekhar.shop`.
+
+2.  **Backend (LiveKit):**
+    * Deployed on an **AWS EC2 (t3.micro)** instance.
+    * Runs **Docker Compose** to manage `livekit`, `caddy`, `redis`, and `egress` services.
+    * The `livekit.yaml` and `docker-compose.yaml` are configured for production (see the `livekit.bhargavshekhar.shop_docker` directory).
+
+3.  **DNS (GoDaddy):**
+    * **A Record** for `livekit.bhargavshekhar.shop` points to the EC2 server's Elastic IP.
+    * **A Record** for `turn.bhargavshekhar.shop` points to the *same* EC2 Elastic IP.
+    * **CNAME Record** for `meet.bhargavshekhar.shop` points to `cname.vercel-dns.com`.
+
+---
+
+## 💻 Running Locally
+
+You can run the entire stack on your local machine.
+
+### Prerequisites
+
+* [Node.js](https://nodejs.org/) (v18+)
+* [pnpm](https://pnpm.io/) (or `npm`/`yarn`)
+* [Docker Desktop](https://www.docker.com/products/docker-desktop/)
+
+### 1. Run the LiveKit Backend (Local Dev Mode)
+
+For local development, you don't need the complex production `docker-compose` setup. Just run the simple development server:
 
 ```sh
-npx create-turbo@latest
-```
-
-## What's inside?
-
-This Turborepo includes the following packages/apps:
-
-### Apps and Packages
-
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
-
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
-
-### Utilities
-
-This Turborepo has some additional tools already setup for you:
-
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
-
-### Build
-
-To build all apps and packages, run the following command:
-
-```
-cd my-turborepo
-
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo build
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo build
-yarn dlx turbo build
-pnpm exec turbo build
-```
-
-You can build a specific package by using a [filter](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters):
-
-```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo build --filter=docs
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo build --filter=docs
-yarn exec turbo build --filter=docs
-pnpm exec turbo build --filter=docs
-```
-
-### Develop
-
-To develop all apps and packages, run the following command:
-
-```
-cd my-turborepo
-
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo dev
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo dev
-yarn exec turbo dev
-pnpm exec turbo dev
-```
-
-You can develop a specific package by using a [filter](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters):
-
-```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo dev --filter=web
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo dev --filter=web
-yarn exec turbo dev --filter=web
-pnpm exec turbo dev --filter=web
-```
-
-### Remote Caching
-
-> [!TIP]
-> Vercel Remote Cache is free for all plans. Get started today at [vercel.com](https://vercel.com/signup?/signup?utm_source=remote-cache-sdk&utm_campaign=free_remote_cache).
-
-Turborepo can use a technique known as [Remote Caching](https://turborepo.com/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
-
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup?utm_source=turborepo-examples), then enter the following commands:
-
-```
-cd my-turborepo
-
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo login
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo login
-yarn exec turbo login
-pnpm exec turbo login
-```
-
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
-
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
-
-```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo link
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo link
-yarn exec turbo link
-pnpm exec turbo link
-```
-
-## Useful Links
-
-Learn more about the power of Turborepo:
-
-- [Tasks](https://turborepo.com/docs/crafting-your-repository/running-tasks)
-- [Caching](https://turborepo.com/docs/crafting-your-repository/caching)
-- [Remote Caching](https://turborepo.com/docs/core-concepts/remote-caching)
-- [Filtering](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters)
-- [Configuration Options](https://turborepo.com/docs/reference/configuration)
-- [CLI Usage](https://turborepo.com/docs/reference/command-line-reference)
+# This command pulls the LiveKit image and runs it in dev mode
+docker run -it --rm \
+  -p 7880:7880 \
+  -p 7881:7881/udp \
+  livekit/livekit-server \
+  --dev
