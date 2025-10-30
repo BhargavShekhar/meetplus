@@ -7,12 +7,11 @@ import { useRouter } from "next/navigation";
 
 export const Lobby = () => {
     const [username, setUsername] = useState("");
-    const [room, setRoom] = useState("");
 
     const router = useRouter();
 
     const handleSubmit = () => {
-        router.push(`/meet?username=${username}&room=${room}`)
+        router.push(`/meet/${username}`)
     }
 
     return (
@@ -22,11 +21,6 @@ export const Lobby = () => {
                     placeholder="Username"
                     type="text"
                     onChange={(e) => setUsername(e.target.value)}
-                />
-                <Input
-                    placeholder="Room"
-                    type="text"
-                    onChange={(e) => setRoom(e.target.value)}
                 />
                 <Button
                     variant={"outline"}
