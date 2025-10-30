@@ -9,7 +9,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
-import { Video, Loader2, AlertCircle, Plus, LogIn, Copy, Check } from 'lucide-react'; // Added Copy, Check
+import { Video, Loader2, AlertCircle, Plus, LogIn, Copy, Check } from 'lucide-react';   
 import { Alert, AlertDescription } from '@/components/ui/alert';
 
 interface Props {
@@ -25,7 +25,6 @@ export const Meet = ({ identity }: Props) => {
     const [inputRoomName, setInputRoomName] = useState<string>("");
     const [joinedRoomName, setJoinedRoomName] = useState<string | null>(null);
     
-    // New state to hold the created room name before joining
     const [createdRoomName, setCreatedRoomName] = useState<string | null>(null);
 
     const handleJoin = async (roomToJoin: string) => {
@@ -67,16 +66,13 @@ export const Meet = ({ identity }: Props) => {
             setError(err.message || "Could not get token. Check console.");
             setIsJoining(false);
             setJoinedRoomName(null);
-            // If joining fails, stay on the "created" screen
-            // but don't reset createdRoomName, so they can try again.
         }
     };
 
-    // Updated: Just creates the room name and updates UI, doesn't join
     const handleCreateRoom = () => {
         const newRoomName = uuidv4();
         setCreatedRoomName(newRoomName);
-        setError(null); // Clear any previous errors
+        setError(null);
         console.log("Created new room code:", newRoomName);
     };
 
@@ -86,14 +82,14 @@ export const Meet = ({ identity }: Props) => {
         setIsCopied(true);
         setTimeout(() => {
             setIsCopied(false);
-        }, 2000); // Reset icon after 2 seconds
+        }, 2000);
     };
 
     const handleDisconnect = () => {
         setToken(null);
         setIsJoining(false);
         setJoinedRoomName(null);
-        setCreatedRoomName(null); // Reset to main lobby on disconnect
+        setCreatedRoomName(null);
         console.log("Disconnected from room");
     };
 
