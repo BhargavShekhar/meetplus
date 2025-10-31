@@ -3,12 +3,19 @@
 import { LiveKitRoom, VideoConference } from "@livekit/components-react";
 import '@livekit/components-styles';
 import { motion } from 'framer-motion';
+import { useRouter } from "next/navigation";
 
 interface Props {
     token: string
 }
 
 export const Meet = ({ token }: Props) => {
+    const router = useRouter();
+
+    const handleDisconnect = () => {
+        router.push("/");
+    }
+
     return (
         <motion.div
             initial={{ opacity: 0 }}
@@ -24,6 +31,7 @@ export const Meet = ({ token }: Props) => {
                 audio={true}
                 data-lk-theme="default"
                 style={{ height: '100vh' }}
+                onDisconnected={handleDisconnect}
             >
                 <VideoConference />
             </LiveKitRoom>

@@ -68,11 +68,6 @@ This project is fully deployed. The infrastructure is set up as follows:
     * Runs **Docker Compose** to manage `livekit`, `caddy`, `redis`, and `egress` services.
     * The `livekit.yaml` and `docker-compose.yaml` are configured for production (see the `livekit.bhargavshekhar.shop_docker` directory).
 
-3.  **DNS (GoDaddy):**
-    * **A Record** for `livekit.bhargavshekhar.shop` points to the EC2 server's Elastic IP.
-    * **A Record** for `turn.bhargavshekhar.shop` points to the *same* EC2 Elastic IP.
-    * **CNAME Record** for `meet.bhargavshekhar.shop` points to `cname.vercel-dns.com`.
-
 ---
 
 ## 💻 Running Locally
