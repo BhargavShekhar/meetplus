@@ -3,14 +3,14 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req:NextRequest) {
     const body = await req.json();
-    const { identity, roomName } = body;
+    const { identity, roomCode } = body;
 
-    if (!identity || !roomName) {
-        return NextResponse.json({ error: "roomName and identity are required strings" }, { status: 400 });
+    if (!identity || !roomCode) {
+        return NextResponse.json({ error: "roomCode and identity are required strings" }, { status: 400 });
     }
 
     try {
-        const token = await generateToken({ identity, roomName });
+        const token = await generateToken({ identity, roomCode });
 
         return NextResponse.json({ token });
     } catch (error) {

@@ -4,10 +4,10 @@ const apiKey = process.env.LIVEKIT_API_KEY || "devkey";
 const secret = process.env.LIVEKIT_API_SECRET || "secret";
 
 export const generateToken = async ({
-    roomName,
+    roomCode,
     identity
 }: {
-    roomName: string,
+    roomCode: string,
     identity: string
 }): Promise<string> => {
 
@@ -15,7 +15,7 @@ export const generateToken = async ({
         identity
     })
 
-    at.addGrant({ roomJoin: true, room: roomName });
+    at.addGrant({ roomJoin: true, room: roomCode });
 
     const token = await at.toJwt();
 

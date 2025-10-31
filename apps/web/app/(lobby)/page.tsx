@@ -1,4 +1,4 @@
-import { Lobby } from "@/components/lobby/ui/Lobby";
+import Lobby from "@/components/lobby/ui/Lobby";
 
 export default function page() {  
 
