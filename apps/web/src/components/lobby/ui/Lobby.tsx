@@ -1,6 +1,6 @@
 "use client"
 
-import { useCallback, useState } from "react";
+import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -85,7 +85,7 @@ export default function Lobby() {
                             </div>
                         </div>
                         <h1 className="text-6xl md:text-7xl font-bold bg-linear-to-r from-white via-gray-200 to-white bg-clip-text text-transparent tracking-tight">
-                            MeetPlus
+                            Swap Sphere
                         </h1>
                     </div>
                     <p className="text-2xl md:text-3xl text-gray-400 font-light tracking-wide mb-2 animate-[fadeIn_1s_ease-out_0.3s_both]">

@@ -1,1 +1,0 @@
-{"root":["./src/index.ts","./src/helpers/generateToken.ts","./src/routers/token.routes.ts","./src/test/tokenRoute.test.ts"],"version":"5.9.3"}
